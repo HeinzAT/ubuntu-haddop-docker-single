@@ -1,0 +1,63 @@
+# ubuntu-haddop-docker-single
+# Social Data Consulting
+# Programa de Especialización Hadoop: Soluciones Big Data
+#
+# Autor: Erick Luna Rojas 
+# Fecha: 22-Agosto-2020
+#
+# Módulo I - Básico
+#
+# Pasos previos sobre nuestra plataforma de servidores
+# Instalar Docker en Ubuntu
+#
+#actualizamos las referencias y paquetes para instalación
+#usamos el comando: sudo apt update
+#Si existen mensajes donde pregunta continuar [si/no] o [yes/no]
+[hdsdcuser@localhost ~]$ sudo apt update
+
+#
+#Instalamos paquetes previos de la instalación de docker, necesarios
+[hdsdcuser@localhost ~]$ sudo apt-get install  curl apt-transport-https ca-certificates software-properties-common
+
+#la llave para el acceso a la descarga del paquete docker, marcamos el cliente URL con la key
+#usamos el comando: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+[hdsdcuser@localhost ~]$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+#agregamos los repositorios de docker para obtener la instalacion
+usamos el comando sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+[hdsdcuser@localhost ~]$ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+
+#y volvermos a actualizar 
+[hdsdcuser@localhost ~]$ sudo apt update
+
+#instalamos el docker community edition
+#solicita respuesta [y/N], presionamos y, esperamos que lo instale
+[hdsdcuser@localhost ~]$ sudo apt install docker-ce
+
+#ahora verificamos la instalación, previamente iniciamos el servicio y luego conseguimos la versión instalada
+#comprobamos el estado de docker, para salir presionar CTRL+C regresa a la consola
+[hdsdcuser@localhost ~]$ sudo systemctl status docker
+
+#verificamos la version instalada
+[hdsdcuser@localhost ~]$ docker -v
+
+#usaremos los comandos docker ps y docker images,
+#
+[hdsdcuser@localhost ~]$ docker ps
+Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Get http://%2Fvar%2Frun%2Fdocker.sock/v1.40/containers/json: dial unix /var/run/docker.sock: connect: permission denied
+
+#Nos muestra error, nuestro usuario no tiene permisos para ejecutar directamente, debe usar sudo
+#para evitar esto podemos usar el comando: sudo chmod 666 /var/run/docker.sock
+[hdsdcuser@localhost ~]$ sudo chmod 666 /var/run/docker.sock
+
+#una vez con permisos ya podemos ejecutar comando docker directamente
+#
+[hdsdcuser@localhost ~]$ docker ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+
+#
+[hdsdcuser@localhost ~]$ docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+
+
+#Ya tenemos docker instalado en nuestras VMs y SOs.
