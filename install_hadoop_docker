@@ -1,0 +1,177 @@
+# Social Data Consulting
+# Programa de Especialización Hadoop: Soluciones Big Data
+#
+# Autor: Erick Luna Rojas 
+# Fecha: 22-Agosto-2020
+#
+# Módulo I - Básico
+#
+# Pasos previos sobre nuestra plataforma de servidores
+# Instalar una imagen Hadoop de docker hub
+#
+#Visitamos docker hub para encontrar contenedores
+# URL:	https://hub.docker.com/
+# y usaremos el contenedor: sequenceiq/hadoop-docker
+# esperamos que descargue y complete la preparación del contenedor que posee hadoop 2.7.0
+#
+[hdsdcuser@localhost ~]$ docker pull sequenceiq/hadoop-docker:2.7.0
+2.7.0: Pulling from sequenceiq/hadoop-docker
+b253335dcf03: Pulling fs layer 
+a3ed95caeb02: Pulling fs layer 
+69623ef05416: Pulling fs layer 
+63aebddf4bce: Pulling fs layer 
+46305a4cda1d: Pulling fs layer 
+70ff65ec2366: Pulling fs layer 
+72accdc282f3: Pulling fs layer 
+5298ddb3b339: Pulling fs layer 
+ec461d25c2ea: Pulling fs layer 
+315b476b23a4: Pulling fs layer 
+6e6acc31f8b1: Pulling fs layer 
+38a227158d97: Pulling fs layer 
+319a3b8afa25: Pulling fs layer 
+11e1e16af8f3: Pulling fs layer 
+834533551a37: Pulling fs layer 
+c24255b6d9f4: Pulling fs layer 
+8b4ea3c67dc2: Pulling fs layer 
+40ba2c2cdf73: Pulling fs layer 
+5424a04bc240: Pulling fs layer 
+7df43f09096d: Pulling fs layer 
+b34787ee2fde: Pulling fs layer 
+4eaa47927d15: Pulling fs layer 
+cb95b9da9646: Pulling fs layer 
+e495e287a108: Pull complete 
+3158ca49a54c: Pull complete 
+33b5a5de9544: Pull complete 
+d6f46cf55f0f: Pull complete 
+40c19fb76cfd: Pull complete 
+018a1f3d7249: Pull complete 
+40f52c973507: Pull complete 
+49dca4de47eb: Pull complete 
+d26082bd2aa9: Pull complete 
+c4f97d87af86: Pull complete 
+fb839f93fc0f: Pull complete 
+43661864505e: Pull complete 
+d8908a83648e: Pull complete 
+af8b686deb23: Pull complete 
+c1214abd7b96: Pull complete 
+9d00f27ba8d2: Pull complete 
+09f787a7573b: Pull complete 
+4e86267d5247: Pull complete 
+3876cba35aed: Pull complete 
+23df48ffdb39: Pull complete 
+646aedbc2bb6: Pull complete 
+60a65f8179cf: Pull complete 
+046b321f8081: Pull complete 
+Digest: sha256:a40761746eca036fee6aafdf9fdbd6878ac3dd9a7cd83c0f3f5d8a0e6350c76a
+Status: Downloaded newer image for sequenceiq/hadoop-docker:2.7.0
+docker.io/sequenceiq/hadoop-docker:2.7.0
+
+
+# ejecutaremos el contenedor que posee hadoop 2.7.0, el cual va a iniciar el Hadoop 
+# va a iniciar hadoop en un simple cluster
+[hdsdcuser@localhost ~]$ docker run -it sequenceiq/hadoop-docker:2.7.0 /etc/bootstrap.sh -bash
+/
+Starting sshd:                                             [  OK  ]
+Starting namenodes on [d21cbb6063ca]
+d21cbb6063ca: starting namenode, logging to /usr/local/hadoop/logs/hadoop-root-namenode-d21cbb6063ca.out
+localhost: starting datanode, logging to /usr/local/hadoop/logs/hadoop-root-datanode-d21cbb6063ca.out
+Starting secondary namenodes [0.0.0.0]
+0.0.0.0: starting secondarynamenode, logging to /usr/local/hadoop/logs/hadoop-root-secondarynamenode-d21cbb6063ca.out
+starting yarn daemons
+starting resourcemanager, logging to /usr/local/hadoop/logs/yarn--resourcemanager-d21cbb6063ca.out
+localhost: starting nodemanager, logging to /usr/local/hadoop/logs/yarn-root-nodemanager-d21cbb6063ca.out
+bash-4.1#
+
+# verificamos los con el comando jps
+# JPS son las siglas de Java Virtual Machine Process Status Tool o [herramienta de estado de  proceso JVM].
+# Para verificar todos los nodos en ejecución en el host a través de jps, 
+" Debe ejecutar el comando como root o autorizados autorizados: jps
+# De lo contrario, jps solo mostrará los nodos con los que haya iniciado sesión actualmente.
+bash-4.1# jps
+219 DataNode
+402 SecondaryNameNode
+128 NameNode
+543 ResourceManager
+641 NodeManager
+1091 Jps
+
+bash-4.1# ps -ef | grep hadoop | grep -P 'jps|namenode|secondarynamenode|datanode|nodemanager|resourcemanager'
+root         128       1  0 10:36 ?        00:00:13 /usr/java/default/bin/java -Dproc_namenode -Xmx1000m -Djava.net.preferIPv4Stack=true -Dhadoop.log.dir=/usr/local/hadoop/logs -Dhadoop.log.file=hadoop.log -Dhadoop.home.dir= -Dhadoop.id.str=root -Dhadoop.root.logger=INFO,console -Djava.library.path= -Dhadoop.policy.file=hadoop-policy.xml -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Stack=true -Dhadoop.log.dir=/usr/local/hadoop/logs -Dhadoop.log.file=hadoop-root-namenode-c5efcd775541.log -Dhadoop.home.dir=/usr/local/hadoop -Dhadoop.id.str=root -Dhadoop.root.logger=INFO,RFA -Djava.library.path=/usr/local/hadoop/lib/native -Dhadoop.policy.file=hadoop-policy.xml -Djava.net.preferIPv4Stack=true -Dhadoop.security.logger=INFO,RFAS -Dhdfs.audit.logger=INFO,NullAppender -Dhadoop.security.logger=INFO,RFAS -Dhdfs.audit.logger=INFO,NullAppender -Dhadoop.security.logger=INFO,RFAS -Dhdfs.audit.logger=INFO,NullAppender -Dhadoop.security.logger=INFO,RFAS org.apache.hadoop.hdfs.server.namenode.NameNode
+root         219       1  0 10:36 ?        00:00:12 /usr/java/default/bin/java -Dproc_datanode -Xmx1000m -Djava.net.preferIPv4Stack=true -Dhadoop.log.dir=/usr/local/hadoop/logs -Dhadoop.log.file=hadoop.log -Dhadoop.home.dir= -Dhadoop.id.str=root -Dhadoop.root.logger=INFO,console -Djava.library.path= -Dhadoop.policy.file=hadoop-policy.xml -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Stack=true -Dhadoop.log.dir=/usr/local/hadoop/logs -Dhadoop.log.file=hadoop-root-datanode-c5efcd775541.log -Dhadoop.home.dir=/usr/local/hadoop -Dhadoop.id.str=root -Dhadoop.root.logger=INFO,RFA -Djava.library.path=/usr/local/hadoop/lib/native -Dhadoop.policy.file=hadoop-policy.xml -Djava.net.preferIPv4Stack=true -server -Dhadoop.security.logger=ERROR,RFAS -Dhadoop.security.logger=ERROR,RFAS -Dhadoop.security.logger=ERROR,RFAS -Dhadoop.security.logger=INFO,RFAS org.apache.hadoop.hdfs.server.datanode.DataNode
+root         402       1  0 10:36 ?        00:00:07 /usr/java/default/bin/java -Dproc_secondarynamenode -Xmx1000m -Djava.net.preferIPv4Stack=true -Dhadoop.log.dir=/usr/local/hadoop/logs -Dhadoop.log.file=hadoop.log -Dhadoop.home.dir= -Dhadoop.id.str=root -Dhadoop.root.logger=INFO,console -Djava.library.path= -Dhadoop.policy.file=hadoop-policy.xml -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Stack=true -Dhadoop.log.dir=/usr/local/hadoop/logs -Dhadoop.log.file=hadoop-root-secondarynamenode-c5efcd775541.log -Dhadoop.home.dir=/usr/local/hadoop -Dhadoop.id.str=root -Dhadoop.root.logger=INFO,RFA -Djava.library.path=/usr/local/hadoop/lib/native -Dhadoop.policy.file=hadoop-policy.xml -Djava.net.preferIPv4Stack=true -Dhadoop.security.logger=INFO,RFAS -Dhdfs.audit.logger=INFO,NullAppender -Dhadoop.security.logger=INFO,RFAS -Dhdfs.audit.logger=INFO,NullAppender -Dhadoop.security.logger=INFO,RFAS -Dhdfs.audit.logger=INFO,NullAppender -Dhadoop.security.logger=INFO,RFAS org.apache.hadoop.hdfs.server.namenode.SecondaryNameNode
+root         543       1  0 10:37 pts/0    00:00:29 /usr/java/default/bin/java -Dproc_resourcemanager -Xmx1000m -Dhadoop.log.dir=/usr/local/hadoop/logs -Dyarn.log.dir=/usr/local/hadoop/logs -Dhadoop.log.file=yarn--resourcemanager-c5efcd775541.log -Dyarn.log.file=yarn--resourcemanager-c5efcd775541.log -Dyarn.home.dir= -Dyarn.id.str= -Dhadoop.root.logger=INFO,RFA -Dyarn.root.logger=INFO,RFA -Djava.library.path=/usr/local/hadoop/lib/native -Dyarn.policy.file=hadoop-policy.xml -Dhadoop.log.dir=/usr/local/hadoop/logs -Dyarn.log.dir=/usr/local/hadoop/logs -Dhadoop.log.file=yarn--resourcemanager-c5efcd775541.log -Dyarn.log.file=yarn--resourcemanager-c5efcd775541.log -Dyarn.home.dir=/usr/local/hadoop -Dhadoop.home.dir=/usr/local/hadoop -Dhadoop.root.logger=INFO,RFA -Dyarn.root.logger=INFO,RFA -Djava.library.path=/usr/local/hadoop/lib/native -classpath /usr/local/hadoop/etc/hadoop/:/usr/local/hadoop/etc/hadoop/:/usr/local/hadoop/etc/hadoop/:/usr/local/hadoop/share/hadoop/common/lib/*:/usr/local/hadoop/share/hadoop/common/*:/usr/local/hadoop/share/hadoop/hdfs:/usr/local/hadoop/share/hadoop/hdfs/lib/*:/usr/local/hadoop/share/hadoop/hdfs/*:/usr/local/hadoop/share/hadoop/yarn/lib/*:/usr/local/hadoop/share/hadoop/yarn/*:/usr/local/hadoop/share/hadoop/mapreduce/lib/*:/usr/local/hadoop/share/hadoop/mapreduce/*:/usr/local/hadoop/contrib/capacity-scheduler/*.jar:/usr/local/hadoop/contrib/capacity-scheduler/*.jar:/usr/local/hadoop/contrib/capacity-scheduler/*.jar:/usr/local/hadoop/share/hadoop/yarn/*:/usr/local/hadoop/share/hadoop/yarn/lib/*:/usr/local/hadoop/etc/hadoop//rm-config/log4j.properties org.apache.hadoop.yarn.server.resourcemanager.ResourceManager
+root         641       1  0 10:37 ?        00:00:16 /usr/java/default/bin/java -Dproc_nodemanager -Xmx1000m -Dhadoop.log.dir=/usr/local/hadoop/logs -Dyarn.log.dir=/usr/local/hadoop/logs -Dhadoop.log.file=yarn-root-nodemanager-c5efcd775541.log -Dyarn.log.file=yarn-root-nodemanager-c5efcd775541.log -Dyarn.home.dir= -Dyarn.id.str=root -Dhadoop.root.logger=INFO,RFA -Dyarn.root.logger=INFO,RFA -Djava.library.path=/usr/local/hadoop/lib/native -Dyarn.policy.file=hadoop-policy.xml -server -Dhadoop.log.dir=/usr/local/hadoop/logs -Dyarn.log.dir=/usr/local/hadoop/logs -Dhadoop.log.file=yarn-root-nodemanager-c5efcd775541.log -Dyarn.log.file=yarn-root-nodemanager-c5efcd775541.log -Dyarn.home.dir=/usr/local/hadoop -Dhadoop.home.dir=/usr/local/hadoop -Dhadoop.root.logger=INFO,RFA -Dyarn.root.logger=INFO,RFA -Djava.library.path=/usr/local/hadoop/lib/native -classpath /usr/local/hadoop/etc/hadoop/:/usr/local/hadoop/etc/hadoop/:/usr/local/hadoop/etc/hadoop/:/usr/local/hadoop/share/hadoop/common/lib/*:/usr/local/hadoop/share/hadoop/common/*:/usr/local/hadoop/share/hadoop/hdfs:/usr/local/hadoop/share/hadoop/hdfs/lib/*:/usr/local/hadoop/share/hadoop/hdfs/*:/usr/local/hadoop/share/hadoop/yarn/lib/*:/usr/local/hadoop/share/hadoop/yarn/*:/usr/local/hadoop/share/hadoop/mapreduce/lib/*:/usr/local/hadoop/share/hadoop/mapreduce/*:/usr/local/hadoop/contrib/capacity-scheduler/*.jar:/usr/local/hadoop/contrib/capacity-scheduler/*.jar:/usr/local/hadoop/share/hadoop/yarn/*:/usr/local/hadoop/share/hadoop/yarn/lib/*:/usr/local/hadoop/etc/hadoop//nm-config/log4j.properties org.apache.hadoop.yarn.server.nodemanager.NodeManager
+
+#
+#ruta de instalación hadoop
+bash-4.1# echo $HADOOP_PREFIX
+/usr/local/hadoop
+
+#
+bash-4.1# $HADOOP_PREFIX/bin/hadoop version
+Hadoop 2.7.0
+Subversion https://git-wip-us.apache.org/repos/asf/hadoop.git -r d4c8d4d4d203c934e8074b31289a28724c0842cf
+Compiled by jenkins on 2015-04-10T18:40Z
+Compiled with protoc 2.5.0
+From source with checksum a9e90912c37a35c3195d23951fd18f
+This command was run using /usr/local/hadoop-2.7.0/share/hadoop/common/hadoop-common-2.7.0.jar
+
+#
+bash-4.1# $HADOOP_PREFIX/bin/hdfs dfsadmin -report
+Configured Capacity: 53660876800 (49.98 GB)
+Present Capacity: 46465404928 (43.27 GB)
+DFS Remaining: 46465105920 (43.27 GB)
+DFS Used: 299008 (292 KB)
+DFS Used%: 0.00%
+Under replicated blocks: 0
+Blocks with corrupt replicas: 0
+Missing blocks: 0
+Missing blocks (with replication factor 1): 0
+
+-------------------------------------------------
+Live datanodes (1):
+
+Name: 172.17.0.2:50010 (c5efcd775541)
+Hostname: c5efcd775541
+Decommission Status : Normal
+Configured Capacity: 53660876800 (49.98 GB)
+DFS Used: 299008 (292 KB)
+Non DFS Used: 7195471872 (6.70 GB)
+DFS Remaining: 46465105920 (43.27 GB)
+DFS Used%: 0.00%
+DFS Remaining%: 86.59%
+Configured Cache Capacity: 0 (0 B)
+Cache Used: 0 (0 B)
+Cache Remaining: 0 (0 B)
+Cache Used%: 100.00%
+Cache Remaining%: 0.00%
+Xceivers: 1
+Last contact: Fri Aug 21 11:48:04 EDT 2020
+
+
+#nos vamos al navegador web para visualizar nuestra configuración en modo gráfico
+#
+#verificamos la configuración IP del server hadoop, tomamos la IP en eth0 para usarlo en el navegador
+# IP 172.17.0.2
+bash-4.1# ifconfig
+eth0      Link encap:Ethernet  HWaddr 02:42:AC:11:00:02  
+          inet addr:172.17.0.2  Bcast:172.17.255.255  Mask:255.255.0.0
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:140 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:74 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:15141 (14.7 KiB)  TX bytes:5692 (5.5 KiB)
+
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:2145 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:2145 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:307701 (300.4 KiB)  TX bytes:307701 (300.4 KiB)
+
+
+#
+#En el navegador
+# http://172.17.0.2:50070
+# http://172.17.0.2:8088
